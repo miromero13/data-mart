@@ -1,73 +1,94 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Academic Analytics Data Mart & ETL Pipeline
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![TypeORM](https://img.shields.io/badge/TypeORM-0.3-FE0808?style=flat&logo=typeorm&logoColor=white)](https://typeorm.io)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-85EA2D?style=flat&logo=swagger&logoColor=black)](https://swagger.io)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Institutional Data Mart and automated ETL pipeline engineered to ingest university academic datasets, structure dimensional schemas, and expose institutional KPIs and enrollment statistics via RESTful endpoints.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏛️ Dimensional Model & Architecture
 
-## Installation
+The data mart organizes higher-education metrics into structured dimensional entities and fact records:
 
-```bash
-$ npm install
+```text
+data-mart/
+├── src/
+│   ├── indicators/
+│   │   ├── entities/        # Dimensional entities:
+│   │   │   ├── faculty.entity.ts    # Faculties & Academic Departments
+│   │   │   ├── career.entity.ts     # Undergraduate & Graduate Programs
+│   │   │   ├── semester.entity.ts   # Academic cycles and terms
+│   │   │   ├── mode.entity.ts       # Delivery modes (In-person, Hybrid, Virtual)
+│   │   │   ├── locality.entity.ts   # Campuses and regional headquarters
+│   │   │   └── indicator.entity.ts  # Academic fact metrics (Admissions, Dropouts, Graduates)
+│   │   ├── service/         # Business logic and Excel ingestion services
+│   │   │   ├── excel.service.ts     # XLSX parser, schema mapper, and normalization
+│   │   │   └── *.service.ts         # Query services per dimension
+│   │   └── controller/      # REST API endpoints with Swagger documentation
+│   └── config/              # TypeORM database connection & environment loader
 ```
 
-## Running the app
+---
+
+## ⚡ Key Capabilities
+
+- **Automated XLSX Ingestion:** Parses institutional Excel workbooks and extracts structured records across academic periods.
+- **Data Normalization:** Validates and maps external spreadsheets to strongly-typed TypeORM entities in PostgreSQL.
+- **Academic KPI Queries:** Exposes aggregated metrics by career, faculty, modality, and geographic campus.
+- **Interactive Documentation:** Fully documented with Swagger UI at `/docs`.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js:** `>= 18.x`
+- **PostgreSQL:** `>= 14.x`
+
+### 1. Installation
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Test
+### 2. Environment Setup
+
+Create `.env` based on `.env.example`:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Support
+Configure your PostgreSQL credentials:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=datamart_db
+```
 
-## Stay in touch
+### 3. Running the Server
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# Development mode with watch
+npm run start:dev
 
-## License
+# Production build
+npm run build && npm run start:prod
+```
 
-Nest is [MIT licensed](LICENSE).
+API documentation will be available at `http://localhost:3000/docs`.
+
+---
+
+## 👤 Author
+
+Developed by **María Ilse Romero Saavedra** ([@miromero13](https://github.com/miromero13)).
